@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+        <title>Oculux Job | Dashboard</title
+    <% include component/header %>
+
+</head>
+<body class="theme-orange font-montserrat">
+
+<!-- Page Loader -->
+<div class="page-loader-wrapper">
+    <div class="loader">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+        <div class="bar4"></div>
+        <div class="bar5"></div>
+    </div>
+</div>
+
+<!-- Theme Setting -->
+<!-- Overlay For Sidebars -->
+<div class="overlay"></div>
+<div id="wrapper">
+    <% include component/navbar %>
+    <% include component/leftbar %>
+    <div id="main-content">
+                    <div class="container-fluid">
+                            <div class="row clearfix">
+                                    <div class="col-lg-12   col-md-12 col-sm-12">
+                                        
+                                        <div class="card">
+                                            <div class="body">
+                                                <div class="row clearfix">
+                                                    <div class="col-sm-12   ">
+                                                        <div class="form-group">
+                                                            <input type="text" required class="form-control" id="apartmentname" placeholder="Site İsmi">
+                                                        </div>
+                                                    </div>
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <select id="siteid2" onchange="loadoption2()" required name="siteid" class="form-control show-tick">
+                                                            <option value="">- SİTELER -</option>
+                                                            <% Site.forEach(function(Site){ %>
+                                                            <option value="<%=Site.id %>"><%=Site.name %></option>
+                                                            <% }); %>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-12">
+                                                        <div class="form-group">
+                                                            <select required id="blockid2" name="blokid" class="form-control show-tick">
+                                                                <option value="">- bloklar -</option>
+                                                                
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                            </div>
+                                                <div class="row clearfix">
+                                                    <div class="col-sm-12">
+                                                        <button type="submit" onclick="add()" class="btn btn-primary">Kayıt et</button>
+                                                        <button type="reset" class="btn btn-outline-secondary">Sıfırla</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row clearfix">
+                                        <div class="col-lg-12   col-md-12 col-sm-12">
+                                            
+                                            <div class="card">
+                                                <div class="body">
+                                                    <div class="row ">
+                                                            <div class="col-sm-5">
+                                                                    <div class="form-group">
+                                                                        <select id="siteid" onchange="loadoption()" required name="siteid" class="form-control show-tick">
+                                                                            <option value="">- SİTELER -</option>
+                                                                            <% Site.forEach(function(Site){ %>
+                                                                            <option value="<%=Site.id %>"><%=Site.name %></option>
+                                                                            <% }); %>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-5">
+                                                                        <div class="form-group">
+                                                                            <select required id="blockid" name="blokid" class="form-control show-tick">
+                                                                                <option value="">- bloklar -</option>              
+                                                                            </select>
+                                                                        </div>
+                                                                </div>
+                                                                    <div class="col-sm-2">
+                                                                            <button type="submit" onclick="getapartment()" class="btn btn-primary">Ara</button>
+                                                                    </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        
+                                        </div>
+                                    </div>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-custom spacing8">
+                                        <thead>
+                                            <tr> 
+                                                <th>#</th>
+                                                <th>İSİM</th>
+                                                <th>İŞLEM</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbody">
+<tr><td></td><td>lütfen seçim yapınız</td><td></td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    
+    </div>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Site silme onayı</h5>
+                    <button type="button"   class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <input id="id" type="hidden" name="siteid" >
+                </div>
+                <div class="modal-body">
+                    <p>silmeyi onaylıyor musunuz?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-round btn-default" data-dismiss="modal">hayır</button>
+                    <button type="button" class="btn btn-round btn-primary" onclick="deletesite();" ><a id="deletelink"   href="#"   style="color:black"> evet</a></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+     $(document).on("click", "#delete", function () {$("#id").val($(this).data('id'));});
+        function deletesite() {
+            var Id = $('#id').val();
+            alert(Id);
+            $.ajax({
+            type: 'POST',
+            url: '/admin/apartment/delete',
+            data: 'id='+Id,
+            success: function(result) {
+                if(result=="ok"){
+                    $('#exampleModal').modal('toggle');
+                    alert("daire silindi");
+                    window.location.reload();
+                    
+                }else{
+                    alert("işlem gerçekleştirilirken hata oluştu");
+                }
+            }
+            });
+        }    
+   function loadoption() {
+        var id=$("#siteid").val();
+        var result=ajax(id);
+        if(result!=0){
+        $("#blockid").html("");  
+        for (var i in result) {
+          
+            $("#blockid").append('<option value="'+result[i].id+'" >'+result[i].name+'</option>');
+        }}else{
+            alert("bu sitede blok bulunmuyor");
+        }
+    }
+    function loadoption2() {
+        var id=$("#siteid2").val();
+        var result=ajax(id);
+        if(result!=0){
+            $("#blockid2").html("");  
+        for (var i in result) {
+            $("#blockid2").append('<option value="'+result[i].id+'" >'+result[i].name+'</option>');
+        }}else{
+            alert("bu sitede blok bulunmuyor");
+        }
+    }
+    function ajax(Id) {
+           var data='';
+            $.ajax({
+            type: 'POST',
+            url: '/admin/block/get',
+            data: 'id='+Id,
+            async: false,
+            xhrFields: {
+      withCredentials: true
+   },
+            success: function(result) {
+               data=result;
+               console.log(data);
+               
+            }});
+            return data;
+    }
+    function getapartment() {
+           var id=$("#blockid").val();
+            $.ajax({
+            type: 'POST',
+            url: '/admin/apartment/get',
+            data: 'id='+id,
+            xhrFields: {
+            withCredentials: true
+            },
+            success: function(result) {
+               if (result!=0) {
+                $("#tbody").html("");
+                for (var i in result) {
+                   $("#tbody").append('<tr><td>#</td><td>'+result[i].name+'</td><td>  <button type="button"  id="delete" class="btn btn-default btn-sm" title="Delete" data-id="'+result[i].id+'" data-toggle="modal" data-target="#exampleModal"> <i class="fa fa-trash-o"></i></button></td></tr>');
+                }
+                } else {
+                   alert("bu blokta daire eklenmemiş");
+               }   
+            }});
+            return data;
+    }
+    function add() {
+           var blockid=$("#blockid2").val();
+           var name=$("#apartmentname").val();
+
+            $.ajax({
+            type: 'POST',
+            url: '/admin/apartment/add',
+            data: "blockid="+blockid+"&apartmentname="+name,
+            async: false,
+            xhrFields: {
+            withCredentials: true
+            },
+            success: function(result) {
+             alert(result);
+               
+            }});
+    }
+</script>
+</div>
+<% include component/script %>
+</body>
+</html>

@@ -1,0 +1,4 @@
+const users = await User.findAll({
+  where: { username: "alexdmc" },
+  include: [{ model: Tweet, as: "Tweets" }] ///< include used to eager-load associated model 
+}).catch(errHandler);

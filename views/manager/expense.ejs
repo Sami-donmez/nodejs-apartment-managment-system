@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+        <title>Oculux Job | Dashboard</title
+    <% include component/header %>
+
+</head>
+<body class="theme-orange font-montserrat">
+
+<!-- Page Loader -->
+<div class="page-loader-wrapper">
+    <div class="loader">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+        <div class="bar4"></div>
+        <div class="bar5"></div>
+    </div>
+</div>
+
+<!-- Theme Setting -->
+
+
+<!-- Overlay For Sidebars -->
+<div class="overlay"></div>
+
+<div id="wrapper">
+        <% include component/navbar %>
+    <% include component/leftbar %>
+    <div id="main-content">
+        <div class="container-fluid">
+            <div class="row clearfix">
+                    <div class="col-lg-12   col-md-12 col-sm-12">
+                        <form method="POST" action="expense/add">
+                        <div class="card">
+                                <div class="body">
+                                        <div class="row clearfix">
+                                            <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                            <label>Banka Hesapları</label>
+                                                        <select required name="bankid" class="form-control show-tick">
+                                                            <option value="">- Banka Hesapları -</option>
+                                                            <% Bank.forEach(function(Bank){ %>
+                                                            <option value="<%=Bank.id %>"><%=Bank.name %>-<%=Bank.branch_name %>-<%=Bank.branch_no %></option>
+                                                            <% }); %>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                        <div class="col-sm-12   ">
+                                            <div class="form-group">
+                                                <label>Gider kaynagı</label>
+                                                <input type="text" name="source"required class="form-control" placeholder="Gider kaynagı">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12   ">
+                                            <div class="form-group">
+                                                <label>Açıklama</label>
+                                                <input type="text" required name="statement" class="form-control" placeholder="Açıklama">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12   ">
+                                            <div class="form-group">
+                                                    <label>Gider Miktarı</label>
+                                                <input type="number" min="0" value="0" step="0.01" required class="form-control" name="amount" placeholder="Gider miktarı">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-sm-12">
+                                            <button type="submit" class="btn btn-primary">Kayıt et</button>
+                                            <button type="reset" class="btn btn-outline-secondary">Sıfırla</button>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+            <hr>
+        <div class="block-header">
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-hover table-custom spacing8">
+                        <thead>
+                            <tr> 
+                                <th>#</th>
+                                <th>Gider</th>
+                                <th>AÇIKLAMA</th>
+                                <th>TARİH</th>
+                                <th>KAYNAK</th>
+                                <th>İŞLEMLER</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                                    <% Revenue.forEach(function(Revenue){ %>
+                                        <tr>
+                                            <td>
+                                                <div>#</div>
+                                            </td>
+                                            <td>
+                                                <%=Revenue.amount %>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <%=Revenue.statement %>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <%=Revenue.date %>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                    <div>
+                                                        <%=Revenue.source %>
+                                                    </div>
+                                                </td>
+                                            <td>
+                                                <button type="button" id="update" class="btn btn-default btn-sm" title="Edit" data-id="<%=Revenue.id %>" data-toggle="modal" data-target=".new-project-modal">
+                                                    <i class="fa fa-pencil"></i>
+                                                </button>
+                                                <button type="button" id="delete" class="btn btn-default btn-sm" title="Delete" data-id="<%=Revenue.id %>" data-toggle="modal" data-target="#exampleModal">
+                                                    <i class="fa fa-trash-o"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                      <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--control modal-->
+
+
+<div class="modal fade new-project-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                        <div class="input-group mb-3">
+                            <label>Banka Hesapları</label>
+                            <select required id="bankid" class="form-control show-tick">
+                                <option value="">- Banka Hesapları -</option>
+                                <% Bank.forEach(function(Bank){ %>
+                                <option value="<%=Bank.id %>"><%=Bank.name %>-<%=Bank.branch_name %>-<%=Bank.branch_no %></option>
+                                <% }); %>
+                            </select>
+                       </div>
+                        <div class="input-group mb-3">
+                            <label>Açıklama</label>
+                            <input type="hidden" id="id" value="0" >
+                            <input type="text" required id="statement" class="form-control" placeholder="Açıklama">
+                        </div>
+                        <div class="input-group mb-3">
+                            <label>Gelir kaynagı</label>
+                            <input type="text" id="source"required class="form-control" placeholder="Gelir kaynagı">
+                        </div>
+                        <div class="input-group mb-3">
+                                <label>Gelir Miktarı</label>
+                            <input type="number" required class="form-control" id="amount" placeholder="Gelir miktarı">
+                        </div>
+                    </div>
+        
+            <div class="modal-footer">
+                    <button type="button" class="btn btn-round btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-round btn-success" onclick="updatesite();">Save changes</button>
+            </div>
+            </div>
+        </div>
+        </div>
+        
+        
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Site silme onayı</h5>
+                                <button type="button"   class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>silmeyi onaylıyor musunuz?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-round btn-default" data-dismiss="modal">hayır</button>
+                                <button type="button" class="btn btn-round btn-primary" onclick="deletesite();" ><a id="deletelink"   href="#"   style="color:black"> evet</a></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+          
+            $(document).on("click", "#update", function () {
+                    var id=$(this).data('id');
+                    $("#id").val(id);
+                    $.ajax({
+                    type: 'POST',
+                    url: '/manager/expense/get',
+                    data: 'id='+id,
+                    success: function(result) {
+                        if(result!="ok"){
+                        $('#bankid').val(result.bank_id);
+                        $('#source').val(result.source);
+                        $('#amount').val(result.amount);
+                        $('#statement').val(result.statement);
+                        }else{
+                            alert("işlem gerçekleştirilirken hata oluştu");
+                        }
+                    }
+                    });
+            });
+                $(document).on("click", "#delete", function () {$("#id").val($(this).data('id'));});
+                function deletesite() {
+                    var Id = $('#id').val();
+                    alert(Id);
+                    $.ajax({
+                    type: 'POST',
+                    url: '/manager/expense/delete',
+                    data: 'id='+Id,
+                    success: function(result) {
+                        if(result=="ok"){
+                            $('#exampleModal').modal('toggle');
+                            alert("silindi");
+                            window.location.reload();
+                        }else{
+                            alert("işlem gerçekleştirilirken hata oluştu");
+                        }
+                    }
+                    });
+                }    
+                function updatesite() {
+                    var Id = $('#id').val();
+                    var amount=$('#amount').val();
+                    var statement=$('#statement').val();
+                    var source=$('#source').val();
+                    var bankid=$('#bankid').val();
+                    $.ajax({
+                    type: 'POST',
+                    url: '/manager/expense/update',
+                    data: 'id='+Id+"&amount="+amount+"&statement="+statement+"&bankid="+bankid+"&source="+source,
+                    success: function(result) {
+                        if(result=="ok"){
+                            $('.new-project-modal').modal('toggle');
+                            alert("güncellendi");
+                            window.location.reload();
+                        }else{
+                            alert("işlem gerçekleştirilirken hata oluştu");
+                        }
+                    }
+                    });} 
+        </script>
+        
+<% include component/script %>
+</body>
+</html>
+

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+        <title>Oculux Job | Dashboard</title
+    <% include component/header %>
+
+</head>
+<body class="theme-orange font-montserrat">
+
+<!-- Page Loader -->
+<div class="page-loader-wrapper">
+    <div class="loader">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+        <div class="bar4"></div>
+        <div class="bar5"></div>
+    </div>
+</div>
+
+<!-- Theme Setting -->
+
+
+<!-- Overlay For Sidebars -->
+<div class="overlay"></div>
+
+<div id="wrapper">
+        <% include component/navbar %>
+    <% include component/leftbar %>
+    <div id="main-content">
+        <div class="container-fluid">
+        <div class="block-header">
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-hover table-custom spacing8">
+                        <thead>
+                            <tr> 
+                                <th>#</th>
+                                <th>Gider</th>
+                                <th>AÇIKLAMA</th>
+                                <th>TARİH</th>
+                                <th>KAYNAK</th>
+                                <
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                                    <% Revenue.forEach(function(Revenue){ %>
+                                        <tr>
+                                            <td>
+                                                <div>#</div>
+                                            </td>
+                                            <td>
+                                                <%=Revenue.amount %>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <%=Revenue.statement %>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <%=Revenue.date %>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                    <div>
+                                                        <%=Revenue.source %>
+                                                    </div>
+                                                </td>
+                                         
+                                        </tr>
+                                      <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--control modal-->
+<% include component/script %>
+</body>
+</html>
+

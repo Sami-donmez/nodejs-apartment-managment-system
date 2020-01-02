@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+        <title>Oculux Job | Dashboard</title
+    <% include component/header %>
+
+</head>
+<body class="theme-orange font-montserrat">
+
+<!-- Page Loader -->
+<div class="page-loader-wrapper">
+    <div class="loader">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+        <div class="bar4"></div>
+        <div class="bar5"></div>
+    </div>
+</div>
+
+<!-- Theme Setting -->
+
+
+<!-- Overlay For Sidebars -->
+<div class="overlay"></div>
+
+<div id="wrapper">
+        <% include component/navbar %>
+    <% include component/leftbar %>
+    <div id="main-content">
+        <div class="container-fluid">
+            <div class="row clearfix">
+                    <div class="col-lg-12   col-md-12 col-sm-12">
+                        <form method="POST" action="revenue/add">
+                        <div class="card">
+                            <div class="body">
+        <div class="block-header">
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-hover table-custom spacing8">
+                        <thead>
+                            <tr> 
+                                <th>#</th>
+                                <th>AY</th>
+                                <th>YIL</th>
+                                <th>TUTAR</th>
+                                <th>DURUM</th>
+                                <th>ÖDEME YAP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                                    <% Revenue.forEach(function(Revenue){ %>
+                                        <tr>
+                                            <td>
+                                                <div>#</div>
+                                            </td>
+                                            <td>
+                                                <%=Revenue.month %>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <%=Revenue.year %>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <%=Revenue.amount %>
+                                                </div>
+                                            </td> 
+                                            
+                                            <td>
+                                                <div>
+                                                     <% if (Revenue.pay!=null) { %> ödeme yapıldı <% }else{ %> ödeme yapılmadı<%}%>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <% if (Revenue.pay!=null) { %> 
+                                                        
+                                                    <% }else{ %> 
+                                                        <button type="button" id="update" class="btn btn-success" title="Edit" data-id="<%=Revenue.id %>" data-toggle="modal" data-target=".new-project-modal">
+                                                            <i class="fa fa-pencil"></i>ÖDEME YAP
+                                                        </button>
+                                                    <%}%>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                      <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--control modal-->
+<div class="modal fade new-project-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Setup New Project</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                    <label>AY</label>
+                    <div class="input-group mb-3">
+                    <input type="text" name="" disabled class="form-control" id="month"> 
+                    <input type="hidden" name=""  id="id"> 
+                    </div>   
+                    <label>YIL</label>
+                    <div class="input-group mb-3">
+                        <input type="text" name="" disabled class="form-control"  id="year"> 
+                    </div>
+                    <label>banka hesapları</label>
+                    <div class="input-group mb-3">
+                        <select required id="bankid" class="form-control show-tick">
+                            <option value="">- Banka Hesapları -</option>
+                            <% bank.forEach(function(Bank){ %>
+                            <option value="<%=Bank.id %>"><%=Bank.name %>-<%=Bank.branch_name %>-<%=Bank.branch_no %></option>
+                            <% }); %>
+                        </select>
+                    <div class="input-group mb-3"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-round btn-default" data-dismiss="modal">İPTAL</button>
+                <button type="button" class="btn btn-round btn-success" onclick="updatesite()">ÖDEME YAP </button>
+            </div>
+        </div>
+    </div>
+    </div>
+<script>
+
+    $(document).on("click", "#update", function () {
+            var id=$(this).data('id');
+            $("#id").val(id);
+            $.ajax({
+            type: 'POST',
+            url: '/user/dues/get',
+            data: 'id='+id,
+            success: function(result) {
+                if(result!="ok"){
+                $('#month').val(result.month);
+                $('#year').val(result.year);
+                }else{
+                    alert("işlem gerçekleştirilirken hata oluştu");
+                }
+            }
+            });
+    });
+    
+        function updatesite() {
+            var Id = $('#id').val();
+            var bankid=$('#bankid').val();
+            if(bankid!=""){
+            $.ajax({
+            type: 'POST',
+            url: '/user/dues/add',
+            data: 'duesid='+Id+"&bankid="+bankid,
+            success: function(result) {
+                if(result=="ok"){
+                    $('.new-project-modal').modal('toggle');
+                    alert("ödeme yapıldı");
+                    window.location.reload();
+                }else{
+                    alert("işlem gerçekleştirilirken hata oluştu");
+                }
+            }
+            });}} 
+</script>
+
+<% include component/script %>
+</body>
+</html>
+
